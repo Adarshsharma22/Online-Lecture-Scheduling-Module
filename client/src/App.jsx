@@ -1,13 +1,32 @@
-import react from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Auth/Login";
+import Dashboard from "./pages/Admin/Dashboard";
+import Courses from "./pages/Admin/Courses";
+import Instructors from "./pages/Admin/Instructors";
+import AdminLayout from "./layouts/AdminLayout";
+import AddCourse from "./pages/Admin/AddCourse";
+
 
 function App() {
 
   return (
-    <>
-      <div className="text-center text-red-600 text-2xl"> 
-        hello Developers!
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="courses" element={<Courses />} />
+          <Route path="add-course" element={<AddCourse />} />
+          <Route path="instructors" element={<Instructors />} />
+        </Route>
+
+        <Route path="*" element={<h1>404 | Page Not Found</h1>} />
+
+      </Routes>
+    </BrowserRouter>
   )
 }
 
