@@ -7,6 +7,9 @@ import AdminLayout from "./layouts/AdminLayout";
 import AddCourse from "./pages/Admin/AddCourse";
 import CourseDetails from "./pages/Admin/CourseDetails";
 import AddLecture from "./pages/Admin/AddLecture";
+import InstructorLayout from "./layouts/InstructorLayout";
+import InstructorDashboard from "./pages/Instructor/Dashboard";
+import MyLectures from "./pages/Instructor/MyLectures";
 
 
 function App() {
@@ -25,6 +28,11 @@ function App() {
           <Route path="instructors" element={<Instructors />} />
           <Route path="course/:id" element={<CourseDetails />} />
           <Route path="course/:id/add-lecture" element={<AddLecture />} />
+        </Route>
+
+        <Route path="/instructor" element={<InstructorLayout />}>
+          <Route path="dashboard" element={<InstructorDashboard />} />
+          <Route path="my-lectures" element={<MyLectures />} />
         </Route>
 
         <Route path="*" element={<h1>404 | Page Not Found</h1>} />

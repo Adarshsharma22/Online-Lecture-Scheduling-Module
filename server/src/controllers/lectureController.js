@@ -106,6 +106,28 @@ export const getCourseLectures = async (req, res) => {
   }
 };
 
+// Get Logged-in Instructor's Lectures
+export const getMyLectures = async (req, res) => {
+  try {
+    const lectures = await Lecture.find({
+      instructor: req.user._id,
+    })
+      .populate("course", "name")
+      .populate("instructor", "name email")
+      .sort({ lectureDate: 1 });
+
+    return res.status(200).json({
+      success: true,
+      lectures,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // Delete Lecture
 export const deleteLecture = async (req, res) => {
   try {
@@ -131,3 +153,4 @@ export const deleteLecture = async (req, res) => {
     });
   }
 };
+
