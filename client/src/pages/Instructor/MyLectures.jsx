@@ -13,22 +13,17 @@ const MyLectures = () => {
     const fetchLectures = async () => {
       try {
         const token = localStorage.getItem("token");
-
         const response = await api.get("/instructor/my-lectures", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-
-        setLectures(response.data.lectures);
+        setLectures(response.data.lectures || []);
       } catch (error) {
         console.error(error);
-        setError("Unable to load lectures.");
+        setError("Unable to retrieve your scheduled lectures. Please check your connection.");
       } finally {
         setLoading(false);
       }
     };
-
     fetchLectures();
   }, []);
 
@@ -36,28 +31,26 @@ const MyLectures = () => {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-red-600">
-        {error}
+      <div className="max-w-2xl mx-auto mt-8 bg-red-50 border border-red-200 rounded-xl p-6 text-red-700 flex items-center gap-3 shadow-sm">
+        <span className="text-xl">⚠️</span>
+        <p className="font-medium text-sm">{error}</p>
       </div>
     );
   }
 
   if (lectures.length === 0) {
-    return <EmptyState message="No lectures assigned yet." />;
+    return <EmptyState message="No lectures assigned yet. Check back later!" />;
   }
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-8">
-        My Lectures
-      </h1>
+    <div className="max-w-6xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">My Lectures</h1>
+      </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {lectures.map((lecture) => (
-          <LectureCard
-            key={lecture._id}
-            lecture={lecture}
-          />
+          <LectureCard key={lecture._id} lecture={lecture} />
         ))}
       </div>
     </div>

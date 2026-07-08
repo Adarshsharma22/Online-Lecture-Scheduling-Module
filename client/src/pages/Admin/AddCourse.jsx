@@ -4,41 +4,22 @@ import api from "../../services/api";
 
 function AddCourse() {
   const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
-    name: "",
-    level: "",
-    description: "",
-    image: "",
-  });
-
+  const [formData, setFormData] = useState({ name: "", level: "", description: "", image: "" });
   const [loading, setLoading] = useState(false);
-
   const { name, level, description, image } = formData;
 
-  // Handle Input Change
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Submit Form
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!name || !level || !description) {
-      return alert("Please fill all required fields.");
-    }
+    if (!name || !level || !description) return alert("Please fill all required fields.");
 
     try {
       setLoading(true);
-
       await api.post("/courses", formData);
-
       alert("Course created successfully!");
-
       navigate("/admin/courses");
     } catch (error) {
       console.log(error);
@@ -49,42 +30,28 @@ function AddCourse() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-8">
+    <div className="max-w-2xl mx-auto bg-white border border-gray-100 shadow-sm rounded-2xl p-8">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-800 text-center">Add New Course</h1>
+        <p className="text-center text-sm text-gray-500 mt-1">Fill out the information below to register a new course path.</p>
+      </div>
 
-      <h1 className="text-3xl font-bold mb-8 text-center">
-        Add New Course
-      </h1>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-
-        {/* Course Name */}
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block mb-2 font-semibold">
-            Course Name
-          </label>
-
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Course Name</label>
           <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={handleChange}
-            placeholder="Enter Course Name"
-            className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="text" name="name" value={name} onChange={handleChange}
+            placeholder="e.g. Master Clean Code Architecture"
+            className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             required
           />
         </div>
 
-        {/* Level */}
         <div>
-          <label className="block mb-2 font-semibold">
-            Level
-          </label>
-
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Skill Level</label>
           <select
-            name="level"
-            value={level}
-            onChange={handleChange}
-            className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            name="level" value={level} onChange={handleChange}
+            className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white"
             required
           >
             <option value="">Select Level</option>
@@ -94,80 +61,51 @@ function AddCourse() {
           </select>
         </div>
 
-        {/* Description */}
         <div>
-          <label className="block mb-2 font-semibold">
-            Description
-          </label>
-
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Description</label>
           <textarea
-            name="description"
-            value={description}
-            onChange={handleChange}
-            rows="5"
-            placeholder="Enter Course Description"
-            className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            name="description" value={description} onChange={handleChange} rows="4"
+            placeholder="Provide a detailed roadmap description..."
+            className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             required
           />
         </div>
 
-        {/* Image URL */}
         <div>
-          <label className="block mb-2 font-semibold">
-            Image URL
-          </label>
-
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Image URL (Optional)</label>
           <input
-            type="text"
-            name="image"
-            value={image}
-            onChange={handleChange}
-            placeholder="https://example.com/image.png"
-            className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="url" name="image" value={image} onChange={handleChange}
+            placeholder="https://images.unsplash.com/photo-..."
+            className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
           />
         </div>
 
-        {/* Preview */}
         {image && (
-          <div>
-            <label className="block mb-2 font-semibold">
-              Image Preview
-            </label>
-
+          <div className="bg-gray-50 p-3 rounded-xl border border-dashed border-gray-200">
+            <span className="block text-xs font-semibold text-gray-500 mb-2">Live Graphic Preview</span>
             <img
-              src={image}
-              alt="Course Preview"
-              className="w-full h-56 object-cover rounded-lg border"
-              onError={(e) => {
-                e.target.style.display = "none";
-              }}
+              src={image} alt="Course Preview"
+              className="w-full h-44 object-cover rounded-lg border border-gray-100"
+              onError={(e) => e.target.style.display = "none"}
             />
           </div>
         )}
 
-        {/* Buttons */}
-        <div className="flex gap-4">
-
+        <div className="flex gap-4 pt-4 border-t border-gray-100 mt-6">
           <button
-            type="submit"
-            disabled={loading}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
-          >
-            {loading ? "Saving..." : "Save Course"}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => navigate("/admin/courses")}
-            className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-semibold transition"
+            type="button" onClick={() => navigate("/admin/courses")}
+            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold text-sm transition"
           >
             Cancel
           </button>
-
+          <button
+            type="submit" disabled={loading}
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold text-sm shadow-md shadow-blue-500/10 transition disabled:opacity-50"
+          >
+            {loading ? "Saving Module..." : "Save Course"}
+          </button>
         </div>
-
       </form>
-
     </div>
   );
 }
