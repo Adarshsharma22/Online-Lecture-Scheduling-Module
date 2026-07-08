@@ -85,7 +85,7 @@ export const deleteCourse = async (req, res) => {
             });
         }
 
-        await course.delete();
+        await course.deleteOne();
 
         res.json({
             success: true,

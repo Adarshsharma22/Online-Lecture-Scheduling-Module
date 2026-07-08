@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPlus, FaTrash } from "react-icons/fa";
+import { FaEye, FaPlus, FaTrash } from "react-icons/fa";
 import api from "../../services/api";
 
 function Courses() {
@@ -9,38 +9,35 @@ function Courses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Get All Courses
   const getCourses = async () => {
     try {
       const res = await api.get("/courses");
       setCourses(res.data.courses);
     } catch (error) {
-      console.log(error);
-      alert("Failed to load courses");
+      console.error(error);
+      alert("Failed to fetch courses.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Delete Course
   const deleteCourse = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this course?"
-    );
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this course?"
+  );
 
-    if (!confirmDelete) return;
+  if (!confirmDelete) return;
 
-    try {
-      await api.delete(`/courses/${id}`);
+  try {
+    const res = await api.delete(`/courses/${id}`);
 
-      alert("Course deleted successfully");
+    alert(res.data.message);
 
-      getCourses();
-    } catch (error) {
-      console.log(error);
-      alert("Failed to delete course");
-    }
-  };
+    getCourses();
+  } catch (error) {
+    alert(error.response?.data?.message || "Failed to delete course.");
+  }
+};
 
   useEffect(() => {
     getCourses();
@@ -48,9 +45,9 @@ function Courses() {
 
   if (loading) {
     return (
-      <h2 className="text-center text-xl mt-10">
+      <div className="text-center text-xl font-semibold mt-10">
         Loading Courses...
-      </h2>
+      </div>
     );
   }
 
@@ -59,7 +56,7 @@ function Courses() {
 
       {/* Header */}
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-8">
 
         <h1 className="text-3xl font-bold">
           Courses
@@ -67,7 +64,7 @@ function Courses() {
 
         <button
           onClick={() => navigate("/admin/add-course")}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg"
         >
           <FaPlus />
           Add Course
@@ -75,16 +72,14 @@ function Courses() {
 
       </div>
 
-      {/* Empty */}
-
       {courses.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-8 text-center">
+        <div className="bg-white rounded-xl shadow p-8 text-center">
           <h2 className="text-xl font-semibold">
             No Courses Found
           </h2>
         </div>
       ) : (
-        <div className="overflow-x-auto bg-white rounded-lg shadow">
+        <div className="overflow-x-auto bg-white rounded-xl shadow">
 
           <table className="w-full">
 
@@ -97,7 +92,7 @@ function Courses() {
                 </th>
 
                 <th className="p-4 text-left">
-                  Course
+                  Course Name
                 </th>
 
                 <th className="p-4 text-left">
@@ -128,9 +123,12 @@ function Courses() {
                   <td className="p-4">
 
                     <img
-                      src={course.image}
+                      src={
+                        course.image ||
+                        "https://placehold.co/100x70?text=Course"
+                      }
                       alt={course.name}
-                      className="w-20 h-14 object-cover rounded"
+                      className="w-24 h-16 object-cover rounded-lg"
                     />
 
                   </td>
@@ -150,18 +148,25 @@ function Courses() {
                   <td className="p-4 text-center">
 
                     <button
-                      onClick={() => deleteCourse(course._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+                      onClick={() =>
+                        navigate(`/admin/course/${course._id}`)
+                      }
+                      className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
                     >
-                      <FaTrash />
+                      <FaEye />
+                      View Lectures
                     </button>
 
+                    <button
+                        onClick={() => deleteCourse(course._id)}
+                        className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg"
+                        >
+                        <FaTrash />
+                        
+                    </button>
                   </td>
-
                 </tr>
-
               ))}
-
             </tbody>
 
           </table>

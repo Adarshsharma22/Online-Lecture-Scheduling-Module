@@ -8,6 +8,7 @@ import InstructorRoutes from './routes/InstructorRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import lectureRoutes from "./routes/lectureRoutes.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use('/api/instructor', InstructorRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/lectures', lectureRoutes);
 
 
 connectDB();
